@@ -1,8 +1,24 @@
 #Closures-Decorators Excercises
 
+from ast import arg
+from asyncio.log import logger
+from functools import wraps
+from datetime import datetime, timezone
+
 #Closure Excercise
 #Using a closure, create a function, multiples_of(n) which we can use to
 #create generators that generate multiples of n less than a given number.
+def multiples_of(n):
+    def under(limit):
+        i = 1
+        while n*i < limit:
+            yield n*i
+            i += 1
+    return under
+
+m3 = multiples_of(3)
+m3_under30 = m3(30)
+m7_under30 = multiples_of(7)(30)
 
 m3 = multiples_of(3)
 m3_under30 = m3(30)
@@ -21,7 +37,12 @@ print(*m7_under30)
 #Decorators Excercise 1
 #@make_upper – make every letter of a string returned from the decorated
 #function uppercase.
+def make_upper(func):
+    def wrap_func():
+        return func().upper()
+    return wrap_func
 
+@make_upper
 def hello_world():
     return 'hello young, good day!!'
 
@@ -32,6 +53,14 @@ print(hello_world()) # output: HELLO YOUNG, GOOD DAY!!
 #@print_func_name – print the name of the decorated function before
 #executing the function.
 
+def print_func_name(my_func):
+    def wrapper():
+        print(f"{my_func.__name__} is running...")
+        my_func()
+    return wrapper
+
+
+@print_func_name
 def my_func():
     print('Python is fun!!')
 
@@ -42,6 +71,15 @@ my_func() # output: my_func is running...
 #Decoratos Excercise 3
 #@give_name(name) – concatenate the given name at the end of a string
 #returned from the decorated function.
+def make_upper(lower_str):
+    def str_toupper(*args):
+        toupper = lower_str(*args)
+        return toupper.upper()
+    return str_toupper
+
+@make_upper
+def hello_world():
+    return 'hello usha, good day!!'
 def greeting():
     return 'Hello'
 
@@ -83,6 +121,12 @@ print(square(2.9)) # output: The return type is <class 'float'>
 #Decorators Excercise 6
 #@execute_log – write a function execution log on the log file. (log below)
 
+def log_file(func):
+    def write_to(*args, **kwargs):
+        print(f"{datetime.now()} {func.__name__}")
+        return func(*args, **kwargs)
+    return write_to
+@log_file
 def multiply(*nums):
     mult = 1
     for n in nums:
@@ -91,6 +135,7 @@ def multiply(*nums):
 
 def hello_world():
     return 'hello world!!'
+
 
 print(multiply(6, 2, 3)) # 36
 print(hello_world()) # hello world!!
