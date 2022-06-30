@@ -1,8 +1,5 @@
 #Closures-Decorators Excercises
 
-from ast import arg
-from asyncio.log import logger
-from functools import wraps
 from datetime import datetime, timezone
 
 #Closure Excercise
