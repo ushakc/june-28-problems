@@ -86,11 +86,18 @@ print(greeting()) # output: Hello Theresa
 #Decorators Excercise 4
 #@print_input_type – print a data type of the input argument before
 #executing the decorated function.
+def print_input_type(my_func):
+    def wrapper(*args):
+        print(type(args[0]))
+        result = my_func(args[0])
+        return result
+    return wrapper
 
-def square(n):
+@print_input_type
+def square_of(n):
     return n ** 2
 
-print(square(3.5)) # output: The input data type is <class 'float'>
+print(square_of(3.5)) # output: The input data type is <class 'float'>
                     #12.25
 #-------------------------------------------------------------------
 
@@ -98,7 +105,17 @@ print(square(3.5)) # output: The input data type is <class 'float'>
 #@check_return_type(return_type) – check if the return type of the
 #decorated function is return_type and print the result before executing
 #the function.
+def check_return_type(*args):        # function arguments
+        def wrapper(*args2):
+            result_type= my_func(args2[0])
+            if not type(result_type) == args[0]:
+                print(f'The return type is NOT {args[0]}')
+            else:
+                print(f'The return type is {args[0]}')
+            return my_func(*args2)
+        return wrapper
 
+@check_return_type(str)
 #pass in a string
 def square(n):
     return n ** 2
@@ -118,10 +135,10 @@ print(square(2.9)) # output: The return type is <class 'float'>
 #Decorators Excercise 6
 #@execute_log – write a function execution log on the log file. (log below)
 
-def log_file(func):
+def log_file(my_func):
     def write_to(*args, **kwargs):
-        print(f"{datetime.now()} {func.__name__}")
-        return func(*args, **kwargs)
+        print(f"{datetime.now()} {my_func.__name__}")
+        return my_func(*args, **kwargs)
     return write_to
 @log_file
 def multiply(*nums):
